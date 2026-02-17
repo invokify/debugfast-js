@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from 'react';
-import { BugFast } from '../core/BugFast';
+import { BugFast } from 'bugfast-js';
 
 export interface BugFastErrorBoundaryProps {
   /** Fallback UI to render when an error occurs */
@@ -114,4 +114,4 @@ export function withBugFastErrorBoundary<P extends object>(
 }
 
 // Re-export types for convenience
-export type { BugFastConfig, ErrorReport, CaptureOptions } from '../core/types';
+export type { BugFastConfig, ErrorReport, CaptureOptions } from 'bugfast-js';

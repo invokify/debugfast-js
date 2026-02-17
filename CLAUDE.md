@@ -63,6 +63,9 @@ Console logs, network requests, and user actions use circular buffers to limit m
 ### Sensitive Data Masking
 Password inputs and sensitive fields are automatically masked in DOM snapshots and user action tracking.
 
+### UUID Generation
+Event IDs are generated as UUID v4 using `crypto.randomUUID()` with a fallback implementation for environments without native support.
+
 ## API Design
 ```typescript
 // Initialize
@@ -84,4 +87,48 @@ app.use(bugfastPlugin);
 ```
 
 ## Error Report Payload
-Reports include: id, timestamp, message, stack, source, browser info, screenshot, console logs, network requests, user actions, DOM snapshot, user info, and tags.
+Reports include: id (UUID v4), timestamp, message, stack, source, browser info, screenshot, console logs, network requests, user actions, DOM snapshot, user info, and tags.
+
+## Backend Integration
+
+### Ingestion API Endpoints
+- `POST /v1/events` - Single event (accepts `IngestPayload` directly)
+- `POST /v1/events/batch` - Batch events (accepts `{ reports: IngestPayload[] }`)
+
+Both endpoints require `X-API-Key` header for authentication.
+
+### Event Processing Pipeline
+1. SDK captures error and sends to ingestion API
+2. Ingestion validates API key and enqueues event to Redis (BullMQ)
+3. Worker processes queue and inserts into ClickHouse
+
+### Queue Configuration
+- Queue name: `bugfast-events` (BullMQ queue names cannot contain `:`)
+- Default concurrency: 10 workers
+- Retry: 3 attempts with exponential backoff
+
+### ClickHouse Requirements
+- Database: `bugfast`
+- Timestamp format: `YYYY-MM-DD HH:MM:SS.mmm` (DateTime64(3))
+- Async inserts enabled with `wait_for_async_insert: 1`
+
+### Environment Variables
+Apps require `.env.local` with:
+```
+DATABASE_URL=postgresql://...
+DIRECT_URL=postgresql://...
+REDIS_URL=redis://localhost:6379
+CLICKHOUSE_HOST=http://localhost:8123
+CLICKHOUSE_DATABASE=bugfast
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
+
+For monorepo apps (ingestion, worker), create symlinks to root `.env.local`:
+```bash
+ln -s ../../.env.local .env.local
+```
+
+### Database Schema
+Uses Supabase Auth - no separate User table. Project and ProjectMember tables reference `auth.users(id)` directly via userId field (no foreign key constraint due to separate schemas).

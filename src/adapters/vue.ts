@@ -1,5 +1,5 @@
 import type { App, ComponentPublicInstance } from 'vue';
-import { BugFast } from '../core/BugFast';
+import { BugFast } from 'bugfast-js';
 
 export interface BugFastPluginOptions {
   /** Whether to capture Vue-specific component info */
@@ -155,4 +155,4 @@ export function useBugFastErrorHandler(): {
 }
 
 // Re-export types for convenience
-export type { BugFastConfig, ErrorReport, CaptureOptions } from '../core/types';
+export type { BugFastConfig, ErrorReport, CaptureOptions } from 'bugfast-js';

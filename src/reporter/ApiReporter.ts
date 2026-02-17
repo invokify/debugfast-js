@@ -137,9 +137,15 @@ export class ApiReporter {
   }
 
   private async sendRequest(reports: ErrorReport[]): Promise<void> {
-    const payload = reports.length === 1 ? reports[0] : { reports };
+    // Determine endpoint and payload format
+    // apiEndpoint should be the base (e.g., http://localhost:3001/v1/events)
+    // Single events go to /events, batches go to /events/batch
+    const isSingle = reports.length === 1;
+    const baseEndpoint = this.config.apiEndpoint.replace(/\/batch\/?$/, '');
+    const endpoint = isSingle ? baseEndpoint : `${baseEndpoint}/batch`;
+    const payload = isSingle ? reports[0] : { reports };
 
-    const response = await fetch(this.config.apiEndpoint, {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -149,7 +155,8 @@ export class ApiReporter {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      const body = await response.text();
+      throw new Error(`HTTP ${response.status}: ${body}`);
     }
   }
 

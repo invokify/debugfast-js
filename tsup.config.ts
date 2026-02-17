@@ -1,16 +1,31 @@
 import { defineConfig } from 'tsup';
 
-export default defineConfig({
-  entry: {
-    index: 'src/index.ts',
-    react: 'src/adapters/react.tsx',
-    vue: 'src/adapters/vue.ts',
+export default defineConfig([
+  // Main bundle
+  {
+    entry: { index: 'src/index.ts' },
+    format: ['cjs', 'esm'],
+    dts: true,
+    sourcemap: true,
+    clean: true,
+    treeshake: true,
   },
-  format: ['cjs', 'esm'],
-  dts: true,
-  sourcemap: true,
-  clean: true,
-  external: ['react', 'vue'],
-  treeshake: true,
-  splitting: false,
-});
+  // React adapter - imports bugfast-js at runtime
+  {
+    entry: { react: 'src/adapters/react.tsx' },
+    format: ['cjs', 'esm'],
+    dts: true,
+    sourcemap: true,
+    external: ['react', 'bugfast-js'],
+    treeshake: true,
+  },
+  // Vue adapter - imports bugfast-js at runtime
+  {
+    entry: { vue: 'src/adapters/vue.ts' },
+    format: ['cjs', 'esm'],
+    dts: true,
+    sourcemap: true,
+    external: ['vue', 'bugfast-js'],
+    treeshake: true,
+  },
+]);
