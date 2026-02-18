@@ -6,8 +6,8 @@ import './style.css';
 
 // Initialize BugFast
 BugFast.init({
-  apiEndpoint: 'http://localhost:3001/v1/events', // Single events go here, batches go to /batch
-  apiKey: 'f76bf7ae-669f-4dc7-b406-431e67f635a9:03333005c455472c92a559c263981e82',
+  apiEndpoint: 'https://httpbin.org/post',
+  apiKey: 'test-api-key',
   captureScreenshot: true,
   captureConsole: true,
   captureNetwork: true,
