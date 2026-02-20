@@ -1,12 +1,12 @@
 // Main client export
-export { BugFast } from './core/BugFast';
+export { DebugFast } from './core/DebugFast';
 
 // Default export for convenience
-export { BugFast as default } from './core/BugFast';
+export { DebugFast as default } from './core/DebugFast';
 
 // Type exports
 export type {
-  BugFastConfig,
+  DebugFastConfig,
   ErrorReport,
   CaptureOptions,
   UserInfo,

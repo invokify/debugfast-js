@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import BugFast from 'bugfast-js';
-import { useBugFastErrorHandler } from 'bugfast-js/vue';
+import DebugFast from 'debugfast-js';
+import { useDebugFastErrorHandler } from 'debugfast-js/vue';
 import BuggyComponent from './BuggyComponent.vue';
 
 const showBuggy = ref(false);
 const inputValue = ref('');
 
-const { captureError } = useBugFastErrorHandler();
+const { captureError } = useDebugFastErrorHandler();
 
 const triggerGlobalError = () => {
   setTimeout(() => {
@@ -23,7 +23,7 @@ const triggerManualCapture = () => {
   try {
     JSON.parse('invalid json {{{');
   } catch (error) {
-    BugFast.captureError(error as Error, {
+    DebugFast.captureError(error as Error, {
       extra: { context: 'Parsing user input in Vue' },
       tags: { feature: 'json-parser', framework: 'vue' },
     });
@@ -31,7 +31,7 @@ const triggerManualCapture = () => {
 };
 
 const triggerComposableCapture = () => {
-  captureError(new Error('Error from useBugFastErrorHandler'), {
+  captureError(new Error('Error from useDebugFastErrorHandler'), {
     source: 'composable',
   });
 };
@@ -55,8 +55,8 @@ const triggerNetworkRequest = async () => {
 
 <template>
   <div class="container">
-    <h1>BugFast-JS Vue Test App</h1>
-    <p>Open the browser console to see BugFast debug output.</p>
+    <h1>DebugFast-JS Vue Test App</h1>
+    <p>Open the browser console to see DebugFast debug output.</p>
 
     <div class="controls">
       <section>

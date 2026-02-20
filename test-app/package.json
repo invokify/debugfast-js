@@ -1,5 +1,5 @@
 {
-  "name": "bugfast-test-app",
+  "name": "debugfast-test-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "bugfast-js": "file:.."
+    "debugfast-js": "file:.."
   },
   "devDependencies": {
     "@types/react": "^18.2.0",

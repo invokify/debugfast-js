@@ -1,5 +1,5 @@
 {
-  "name": "bugfast-js",
+  "name": "debugfast-js",
   "version": "1.0.0",
   "description": "Front-end bug catching library for React and Vue applications with comprehensive error context capture",
   "main": "./dist/index.js",

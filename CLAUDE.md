@@ -1,4 +1,4 @@
-# BugFast-JS Development Context
+# DebugFast-JS Development Context
 
 ## Project Overview
 A TypeScript library for catching front-end bugs in React and Vue applications. Captures comprehensive error context including screenshots, browser info, console logs, DOM snapshots, network requests, and user actions.
@@ -14,7 +14,8 @@ A TypeScript library for catching front-end bugs in React and Vue applications. 
 src/
 ├── index.ts              # Main entry point
 ├── core/
-│   ├── BugFast.ts        # Main client class (singleton)
+│   ├── DebugFast.ts        # Main client class (singleton)
+
 │   ├── ErrorCapture.ts   # Global error handlers
 │   └── types.ts          # TypeScript interfaces
 ├── collectors/           # Data collection modules
@@ -39,9 +40,9 @@ src/
 - `npm run dev` - Watch mode build
 
 ## Package Exports
-- `bugfast-js` - Main client
-- `bugfast-js/react` - React Error Boundary
-- `bugfast-js/vue` - Vue plugin
+- `debugfast-js` - Main client
+- `debugfast-js/react` - React Error Boundary
+- `debugfast-js/vue` - Vue plugin
 
 ## Test Apps
 - `test-app/` - React test app (port 5173)
@@ -52,7 +53,7 @@ Run with `npm run dev` in each directory.
 ## Key Patterns
 
 ### Singleton Pattern
-BugFast uses a singleton - initialize once with `BugFast.init()`, access anywhere with `BugFast.getInstance()`.
+DebugFast uses a singleton - initialize once with `DebugFast.init()`, access anywhere with `DebugFast.getInstance()`.
 
 ### Collector Interface
 All collectors implement `init()`, `destroy()`, and `collect()` methods.
@@ -69,21 +70,21 @@ Event IDs are generated as UUID v4 using `crypto.randomUUID()` with a fallback i
 ## API Design
 ```typescript
 // Initialize
-BugFast.init({ apiEndpoint, apiKey, ...options });
+DebugFast.init({ apiEndpoint, apiKey, ...options });
 
 // Manual capture
-BugFast.captureError(error, { extra, tags });
+DebugFast.captureError(error, { extra, tags });
 
 // Set user context
-BugFast.setUser({ id, email, name });
+DebugFast.setUser({ id, email, name });
 
 // React
-<BugFastErrorBoundary fallback={<Error />}>
+<DebugFastErrorBoundary fallback={<Error />}>
   <App />
-</BugFastErrorBoundary>
+</DebugFastErrorBoundary>
 
 // Vue
-app.use(bugfastPlugin);
+app.use(debugfastPlugin);
 ```
 
 ## Error Report Payload
@@ -103,12 +104,12 @@ Both endpoints require `X-API-Key` header for authentication.
 3. Worker processes queue and inserts into ClickHouse
 
 ### Queue Configuration
-- Queue name: `bugfast-events` (BullMQ queue names cannot contain `:`)
+- Queue name: `debugfast-events` (BullMQ queue names cannot contain `:`)
 - Default concurrency: 10 workers
 - Retry: 3 attempts with exponential backoff
 
 ### ClickHouse Requirements
-- Database: `bugfast`
+- Database: `debugfast`
 - Timestamp format: `YYYY-MM-DD HH:MM:SS.mmm` (DateTime64(3))
 - Async inserts enabled with `wait_for_async_insert: 1`
 
@@ -119,7 +120,7 @@ DATABASE_URL=postgresql://...
 DIRECT_URL=postgresql://...
 REDIS_URL=redis://localhost:6379
 CLICKHOUSE_HOST=http://localhost:8123
-CLICKHOUSE_DATABASE=bugfast
+CLICKHOUSE_DATABASE=debugfast
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...

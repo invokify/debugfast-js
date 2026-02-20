@@ -1,11 +1,11 @@
 import { createApp } from 'vue';
-import BugFast from 'bugfast-js';
-import { bugfastPlugin } from 'bugfast-js/vue';
+import DebugFast from 'debugfast-js';
+import { debugfastPlugin } from 'debugfast-js/vue';
 import App from './App.vue';
 import './style.css';
 
-// Initialize BugFast
-BugFast.init({
+// Initialize DebugFast
+DebugFast.init({
   apiEndpoint: 'https://httpbin.org/post',
   apiKey: 'test-api-key',
   captureScreenshot: true,
@@ -15,13 +15,13 @@ BugFast.init({
   captureUserActions: true,
   debug: true,
   beforeSend: (report) => {
-    console.log('BugFast Report:', report);
+    console.log('DebugFast Report:', report);
     return report;
   },
 });
 
 // Set user info
-BugFast.setUser({
+DebugFast.setUser({
   id: 'vue-test-user-123',
   email: 'vue-test@example.com',
   name: 'Vue Test User',
@@ -29,8 +29,8 @@ BugFast.setUser({
 
 const app = createApp(App);
 
-// Install the BugFast Vue plugin
-app.use(bugfastPlugin, {
+// Install the DebugFast Vue plugin
+app.use(debugfastPlugin, {
   captureComponentInfo: true,
 });
 

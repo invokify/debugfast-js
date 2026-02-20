@@ -1,7 +1,7 @@
 /**
- * Configuration options for BugFast initialization
+ * Configuration options for DebugFast initialization
  */
-export interface BugFastConfig {
+export interface DebugFastConfig {
   /** API endpoint to send error reports to */
   apiEndpoint: string;
   /** API key for authentication */

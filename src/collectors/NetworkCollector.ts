@@ -104,7 +104,7 @@ export class NetworkCollector implements Collector {
       username?: string | null,
       password?: string | null
     ): void {
-      (this as XMLHttpRequest & { _bugfastRequest: NetworkRequest })._bugfastRequest = {
+      (this as XMLHttpRequest & { _debugfastRequest: NetworkRequest })._debugfastRequest = {
         url: typeof url === 'string' ? url : url.href,
         method: method.toUpperCase(),
         startTime: Date.now(),
@@ -115,8 +115,8 @@ export class NetworkCollector implements Collector {
     };
 
     XMLHttpRequest.prototype.send = function (body?: Document | XMLHttpRequestBodyInit | null): void {
-      const xhr = this as XMLHttpRequest & { _bugfastRequest: NetworkRequest };
-      const request = xhr._bugfastRequest;
+      const xhr = this as XMLHttpRequest & { _debugfastRequest: NetworkRequest };
+      const request = xhr._debugfastRequest;
 
       if (request) {
         request.startTime = Date.now();

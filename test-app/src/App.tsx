@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import BugFast from 'bugfast-js';
+import DebugFast from 'debugfast-js';
 
 function BuggyComponent(): React.ReactNode {
   throw new Error('This component always crashes!');
@@ -25,7 +25,7 @@ function App() {
     try {
       JSON.parse('invalid json {{{');
     } catch (error) {
-      BugFast.captureError(error as Error, {
+      DebugFast.captureError(error as Error, {
         extra: { context: 'Parsing user input' },
         tags: { feature: 'json-parser' },
       });
@@ -53,8 +53,8 @@ function App() {
 
   return (
     <div style={{ padding: 20, fontFamily: 'system-ui, sans-serif' }}>
-      <h1>BugFast-JS Test App</h1>
-      <p>Open the browser console to see BugFast debug output.</p>
+      <h1>DebugFast-JS Test App</h1>
+      <p>Open the browser console to see DebugFast debug output.</p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 400 }}>
         <section>

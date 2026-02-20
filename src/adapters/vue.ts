@@ -1,7 +1,7 @@
 import type { App, ComponentPublicInstance } from 'vue';
-import { BugFast } from 'bugfast-js';
+import { DebugFast } from 'debugfast-js';
 
-export interface BugFastPluginOptions {
+export interface DebugFastPluginOptions {
   /** Whether to capture Vue-specific component info */
   captureComponentInfo?: boolean;
 }
@@ -71,10 +71,10 @@ function getComponentInfo(vm: ComponentPublicInstance | null): Record<string, un
 }
 
 /**
- * Vue plugin for BugFast error handling
+ * Vue plugin for DebugFast error handling
  */
-export const bugfastPlugin = {
-  install(app: App, options: BugFastPluginOptions = {}): void {
+export const debugfastPlugin = {
+  install(app: App, options: DebugFastPluginOptions = {}): void {
     const { captureComponentInfo = true } = options;
 
     // Global error handler
@@ -86,14 +86,14 @@ export const bugfastPlugin = {
       info: string
     ): void => {
       const error = err instanceof Error ? err : new Error(String(err));
-      const instance = BugFast.getInstance();
+      const instance = DebugFast.getInstance();
 
       if (instance) {
         const componentStack = getComponentStack(vm);
         const componentInfo = captureComponentInfo ? getComponentInfo(vm) : {};
 
         // Capture error with Vue-specific context
-        BugFast.captureError(error, {
+        DebugFast.captureError(error, {
           extra: {
             componentStack,
             vueInfo: info,
@@ -144,15 +144,15 @@ export const bugfastPlugin = {
 /**
  * Composition API helper for capturing errors in setup functions
  */
-export function useBugFastErrorHandler(): {
+export function useDebugFastErrorHandler(): {
   captureError: (error: Error | string, extra?: Record<string, unknown>) => void;
 } {
   return {
     captureError(error: Error | string, extra?: Record<string, unknown>): void {
-      BugFast.captureError(error, { extra });
+      DebugFast.captureError(error, { extra });
     },
   };
 }
 
 // Re-export types for convenience
-export type { BugFastConfig, ErrorReport, CaptureOptions } from 'bugfast-js';
+export type { DebugFastConfig, ErrorReport, CaptureOptions } from 'debugfast-js';

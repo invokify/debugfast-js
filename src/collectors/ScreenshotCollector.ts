@@ -67,7 +67,7 @@ export class ScreenshotCollector implements Collector {
         timestamp: Date.now(),
       };
     } catch (error) {
-      console.warn('[BugFast] Failed to capture screenshot:', error);
+      console.warn('[DebugFast] Failed to capture screenshot:', error);
       return null;
     }
   }
@@ -78,7 +78,7 @@ export class ScreenshotCollector implements Collector {
     try {
       this.html2canvasModule = await import('html2canvas');
     } catch (error) {
-      console.warn('[BugFast] Failed to load html2canvas:', error);
+      console.warn('[DebugFast] Failed to load html2canvas:', error);
     }
   }
 

@@ -10,22 +10,22 @@ export default defineConfig([
     clean: true,
     treeshake: true,
   },
-  // React adapter - imports bugfast-js at runtime
+  // React adapter - imports debugfast-js at runtime
   {
     entry: { react: 'src/adapters/react.tsx' },
     format: ['cjs', 'esm'],
     dts: true,
     sourcemap: true,
-    external: ['react', 'bugfast-js'],
+    external: ['react', 'debugfast-js'],
     treeshake: true,
   },
-  // Vue adapter - imports bugfast-js at runtime
+  // Vue adapter - imports debugfast-js at runtime
   {
     entry: { vue: 'src/adapters/vue.ts' },
     format: ['cjs', 'esm'],
     dts: true,
     sourcemap: true,
-    external: ['vue', 'bugfast-js'],
+    external: ['vue', 'debugfast-js'],
     treeshake: true,
   },
 ]);

@@ -172,7 +172,7 @@ export class ApiReporter {
 
   private log(...args: unknown[]): void {
     if (this.config.debug) {
-      console.log('[BugFast Reporter]', ...args);
+      console.log('[DebugFast Reporter]', ...args);
     }
   }
 }

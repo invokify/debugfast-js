@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import BugFast from 'bugfast-js';
-import { BugFastErrorBoundary } from 'bugfast-js/react';
+import DebugFast from 'debugfast-js';
+import { DebugFastErrorBoundary } from 'debugfast-js/react';
 import App from './App';
 import './index.css';
 
-// Initialize BugFast
-BugFast.init({
+// Initialize DebugFast
+DebugFast.init({
   apiEndpoint: 'https://httpbin.org/post', // Test endpoint that accepts POST
   apiKey: 'test-api-key',
   captureScreenshot: true,
@@ -16,13 +16,13 @@ BugFast.init({
   captureUserActions: true,
   debug: true, // Enable debug logging
   beforeSend: (report) => {
-    console.log('BugFast Report:', report);
+    console.log('DebugFast Report:', report);
     return report;
   },
 });
 
 // Set user info
-BugFast.setUser({
+DebugFast.setUser({
   id: 'test-user-123',
   email: 'test@example.com',
   name: 'Test User',
@@ -30,7 +30,7 @@ BugFast.setUser({
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BugFastErrorBoundary
+    <DebugFastErrorBoundary
       fallback={(error, reset) => (
         <div style={{ padding: 20, backgroundColor: '#ffe0e0', borderRadius: 8 }}>
           <h2>Something went wrong!</h2>
@@ -46,6 +46,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }}
     >
       <App />
-    </BugFastErrorBoundary>
+    </DebugFastErrorBoundary>
   </React.StrictMode>
 );

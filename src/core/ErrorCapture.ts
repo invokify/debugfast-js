@@ -142,7 +142,7 @@ export class ErrorCapture {
       try {
         this.errorHandler(error, source);
       } catch (e) {
-        console.error('[BugFast] Error in error handler:', e);
+        console.error('[DebugFast] Error in error handler:', e);
       }
     }
   }

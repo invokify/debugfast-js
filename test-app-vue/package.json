@@ -1,5 +1,5 @@
 {
-  "name": "bugfast-test-app-vue",
+  "name": "debugfast-test-app-vue",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "vue": "^3.4.0",
-    "bugfast-js": "file:.."
+    "debugfast-js": "file:.."
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",

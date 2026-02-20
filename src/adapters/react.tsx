@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react';
-import { BugFast } from 'bugfast-js';
+import { DebugFast } from 'debugfast-js';
 
-export interface BugFastErrorBoundaryProps {
+export interface DebugFastErrorBoundaryProps {
   /** Fallback UI to render when an error occurs */
   fallback?: ReactNode | ((error: Error, resetError: () => void) => ReactNode);
   /** Callback when an error is caught */
@@ -18,10 +18,10 @@ interface State {
 }
 
 /**
- * React Error Boundary component that captures errors and reports them to BugFast
+ * React Error Boundary component that captures errors and reports them to DebugFast
  */
-export class BugFastErrorBoundary extends Component<BugFastErrorBoundaryProps, State> {
-  constructor(props: BugFastErrorBoundaryProps) {
+export class DebugFastErrorBoundary extends Component<DebugFastErrorBoundaryProps, State> {
+  constructor(props: DebugFastErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
   }
@@ -31,8 +31,8 @@ export class BugFastErrorBoundary extends Component<BugFastErrorBoundaryProps, S
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    // Report to BugFast
-    const instance = BugFast.getInstance();
+    // Report to DebugFast
+    const instance = DebugFast.getInstance();
     if (instance) {
       instance.handleAdapterError(error, 'react', errorInfo.componentStack ?? undefined);
     }
@@ -94,24 +94,24 @@ export class BugFastErrorBoundary extends Component<BugFastErrorBoundaryProps, S
 }
 
 /**
- * Higher-order component that wraps a component with BugFastErrorBoundary
+ * Higher-order component that wraps a component with DebugFastErrorBoundary
  */
-export function withBugFastErrorBoundary<P extends object>(
+export function withDebugFastErrorBoundary<P extends object>(
   WrappedComponent: React.ComponentType<P>,
-  errorBoundaryProps?: Omit<BugFastErrorBoundaryProps, 'children'>
+  errorBoundaryProps?: Omit<DebugFastErrorBoundaryProps, 'children'>
 ): React.FC<P> {
   const displayName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
   const ComponentWithErrorBoundary: React.FC<P> = (props) => (
-    <BugFastErrorBoundary {...errorBoundaryProps}>
+    <DebugFastErrorBoundary {...errorBoundaryProps}>
       <WrappedComponent {...props} />
-    </BugFastErrorBoundary>
+    </DebugFastErrorBoundary>
   );
 
-  ComponentWithErrorBoundary.displayName = `withBugFastErrorBoundary(${displayName})`;
+  ComponentWithErrorBoundary.displayName = `withDebugFastErrorBoundary(${displayName})`;
 
   return ComponentWithErrorBoundary;
 }
 
 // Re-export types for convenience
-export type { BugFastConfig, ErrorReport, CaptureOptions } from 'bugfast-js';
+export type { DebugFastConfig, ErrorReport, CaptureOptions } from 'debugfast-js';

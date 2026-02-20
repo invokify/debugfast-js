@@ -1,5 +1,5 @@
 import type {
-  BugFastConfig,
+  DebugFastConfig,
   CaptureOptions,
   ErrorReport,
   UserInfo,
@@ -15,12 +15,12 @@ import { ApiReporter } from '../reporter/ApiReporter';
 import { generateId } from '../utils/helpers';
 
 /**
- * Main BugFast client class
+ * Main DebugFast client class
  */
-export class BugFast {
-  private static instance: BugFast | null = null;
+export class DebugFast {
+  private static instance: DebugFast | null = null;
 
-  private config: Required<BugFastConfig>;
+  private config: Required<DebugFastConfig>;
   private errorCapture: ErrorCapture;
   private browserCollector: BrowserCollector;
   private consoleCollector: ConsoleCollector | null = null;
@@ -31,7 +31,7 @@ export class BugFast {
   private reporter: ApiReporter;
   private initialized = false;
 
-  private constructor(config: BugFastConfig) {
+  private constructor(config: DebugFastConfig) {
     this.config = {
       captureScreenshot: true,
       captureConsole: true,
@@ -60,25 +60,25 @@ export class BugFast {
   }
 
   /**
-   * Initialize BugFast with configuration
+   * Initialize DebugFast with configuration
    */
-  static init(config: BugFastConfig): BugFast {
-    if (BugFast.instance) {
-      console.warn('[BugFast] Already initialized. Call destroy() first to re-initialize.');
-      return BugFast.instance;
+  static init(config: DebugFastConfig): DebugFast {
+    if (DebugFast.instance) {
+      console.warn('[DebugFast] Already initialized. Call destroy() first to re-initialize.');
+      return DebugFast.instance;
     }
 
-    BugFast.instance = new BugFast(config);
-    BugFast.instance.setup();
+    DebugFast.instance = new DebugFast(config);
+    DebugFast.instance.setup();
 
-    return BugFast.instance;
+    return DebugFast.instance;
   }
 
   /**
    * Get the current instance
    */
-  static getInstance(): BugFast | null {
-    return BugFast.instance;
+  static getInstance(): DebugFast | null {
+    return DebugFast.instance;
   }
 
   /**
@@ -88,9 +88,9 @@ export class BugFast {
     error: Error | string,
     options: CaptureOptions = {}
   ): void {
-    const instance = BugFast.instance;
+    const instance = DebugFast.instance;
     if (!instance) {
-      console.warn('[BugFast] Not initialized. Call BugFast.init() first.');
+      console.warn('[DebugFast] Not initialized. Call DebugFast.init() first.');
       return;
     }
 
@@ -102,9 +102,9 @@ export class BugFast {
    * Set user information
    */
   static setUser(user: UserInfo): void {
-    const instance = BugFast.instance;
+    const instance = DebugFast.instance;
     if (!instance) {
-      console.warn('[BugFast] Not initialized. Call BugFast.init() first.');
+      console.warn('[DebugFast] Not initialized. Call DebugFast.init() first.');
       return;
     }
 
@@ -115,9 +115,9 @@ export class BugFast {
    * Set custom tags
    */
   static setTags(tags: Record<string, string>): void {
-    const instance = BugFast.instance;
+    const instance = DebugFast.instance;
     if (!instance) {
-      console.warn('[BugFast] Not initialized. Call BugFast.init() first.');
+      console.warn('[DebugFast] Not initialized. Call DebugFast.init() first.');
       return;
     }
 
@@ -128,21 +128,21 @@ export class BugFast {
    * Flush any pending error reports
    */
   static async flush(): Promise<void> {
-    const instance = BugFast.instance;
+    const instance = DebugFast.instance;
     if (!instance) return;
 
     await instance.reporter.flush();
   }
 
   /**
-   * Destroy the BugFast instance and clean up
+   * Destroy the DebugFast instance and clean up
    */
   static destroy(): void {
-    const instance = BugFast.instance;
+    const instance = DebugFast.instance;
     if (!instance) return;
 
     instance.teardown();
-    BugFast.instance = null;
+    DebugFast.instance = null;
   }
 
   /**
@@ -235,7 +235,7 @@ export class BugFast {
 
       await this.reporter.send(processedReport);
     } catch (e) {
-      console.error('[BugFast] Failed to capture error:', e);
+      console.error('[DebugFast] Failed to capture error:', e);
     }
   }
 
@@ -295,7 +295,7 @@ export class BugFast {
 
   private log(...args: unknown[]): void {
     if (this.config.debug) {
-      console.log('[BugFast]', ...args);
+      console.log('[DebugFast]', ...args);
     }
   }
 }

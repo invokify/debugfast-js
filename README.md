@@ -1,23 +1,23 @@
-# bugfast-js
+# debugfast-js
 
 Front-end error tracking SDK for React and Vue applications. Captures comprehensive error context including screenshots, console logs, network requests, DOM snapshots, and user actions.
 
 ## Installation
 
 ```bash
-npm install bugfast-js
+npm install debugfast-js
 # or
-pnpm add bugfast-js
+pnpm add debugfast-js
 # or
-yarn add bugfast-js
+yarn add debugfast-js
 ```
 
 ## Quick Start
 
 ```typescript
-import { BugFast } from 'bugfast-js';
+import { DebugFast } from 'debugfast-js';
 
-BugFast.init({
+DebugFast.init({
   apiEndpoint: 'https://your-api.example.com/v1/events',
   apiKey: 'your-api-key',
 });
@@ -28,16 +28,16 @@ BugFast.init({
 ### React
 
 ```tsx
-import { BugFastErrorBoundary } from 'bugfast-js/react';
+import { DebugFastErrorBoundary } from 'debugfast-js/react';
 
 function App() {
   return (
-    <BugFastErrorBoundary
+    <DebugFastErrorBoundary
       fallback={<div>Something went wrong</div>}
       onError={(error, errorInfo) => console.log(error)}
     >
       <YourApp />
-    </BugFastErrorBoundary>
+    </DebugFastErrorBoundary>
   );
 }
 ```
@@ -45,9 +45,9 @@ function App() {
 Or use the higher-order component:
 
 ```tsx
-import { withBugFastErrorBoundary } from 'bugfast-js/react';
+import { withDebugFastErrorBoundary } from 'debugfast-js/react';
 
-const SafeComponent = withBugFastErrorBoundary(MyComponent, {
+const SafeComponent = withDebugFastErrorBoundary(MyComponent, {
   fallback: <ErrorFallback />,
 });
 ```
@@ -56,11 +56,11 @@ const SafeComponent = withBugFastErrorBoundary(MyComponent, {
 
 ```typescript
 import { createApp } from 'vue';
-import { bugfastPlugin } from 'bugfast-js/vue';
+import { debugfastPlugin } from 'debugfast-js/vue';
 import App from './App.vue';
 
 const app = createApp(App);
-app.use(bugfastPlugin, {
+app.use(debugfastPlugin, {
   captureComponentInfo: true, // Include Vue component props and route info
 });
 app.mount('#app');
@@ -70,9 +70,9 @@ Composition API helper:
 
 ```vue
 <script setup>
-import { useBugFastErrorHandler } from 'bugfast-js/vue';
+import { useDebugFastErrorHandler } from 'debugfast-js/vue';
 
-const { captureError } = useBugFastErrorHandler();
+const { captureError } = useDebugFastErrorHandler();
 
 function handleRiskyOperation() {
   try {
@@ -87,7 +87,7 @@ function handleRiskyOperation() {
 ## Configuration
 
 ```typescript
-BugFast.init({
+DebugFast.init({
   // Required
   apiEndpoint: 'https://api.example.com/v1/events',
   apiKey: 'your-api-key',
@@ -127,11 +127,11 @@ BugFast.init({
 
 ### Static Methods
 
-#### `BugFast.init(config)`
+#### `DebugFast.init(config)`
 
 Initialize the SDK. Must be called before any other methods.
 
-#### `BugFast.captureError(error, options?)`
+#### `DebugFast.captureError(error, options?)`
 
 Manually capture an error.
 
@@ -139,57 +139,57 @@ Manually capture an error.
 try {
   await riskyOperation();
 } catch (error) {
-  BugFast.captureError(error, {
+  DebugFast.captureError(error, {
     extra: { operationId: '123' },
     tags: { severity: 'high' },
   });
 }
 ```
 
-#### `BugFast.setUser(user)`
+#### `DebugFast.setUser(user)`
 
 Set or update user information.
 
 ```typescript
-BugFast.setUser({
+DebugFast.setUser({
   id: 'user-123',
   email: 'user@example.com',
   name: 'John Doe',
 });
 ```
 
-#### `BugFast.setTags(tags)`
+#### `DebugFast.setTags(tags)`
 
 Add custom tags to all future error reports.
 
 ```typescript
-BugFast.setTags({
+DebugFast.setTags({
   version: '1.2.3',
   feature: 'checkout',
 });
 ```
 
-#### `BugFast.flush()`
+#### `DebugFast.flush()`
 
 Flush any pending error reports. Useful before page unload.
 
 ```typescript
 window.addEventListener('beforeunload', () => {
-  BugFast.flush();
+  DebugFast.flush();
 });
 ```
 
-#### `BugFast.destroy()`
+#### `DebugFast.destroy()`
 
 Clean up and remove all event listeners.
 
 ```typescript
-BugFast.destroy();
+DebugFast.destroy();
 ```
 
-#### `BugFast.getInstance()`
+#### `DebugFast.getInstance()`
 
-Get the current BugFast instance (or null if not initialized).
+Get the current DebugFast instance (or null if not initialized).
 
 ## What Gets Captured
 
@@ -238,13 +238,13 @@ Full TypeScript support with exported types:
 
 ```typescript
 import type {
-  BugFastConfig,
+  DebugFastConfig,
   ErrorReport,
   CaptureOptions,
   UserInfo,
   StackFrame,
   BrowserInfo,
-} from 'bugfast-js';
+} from 'debugfast-js';
 ```
 
 ## License
