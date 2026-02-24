@@ -40,8 +40,16 @@
     "error-boundary",
     "monitoring"
   ],
-  "author": "",
+  "author": "invokify",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/invokify/debugfast-js.git"
+  },
+  "homepage": "https://github.com/invokify/debugfast-js#readme",
+  "bugs": {
+    "url": "https://github.com/invokify/debugfast-js/issues"
+  },
   "dependencies": {
     "html2canvas": "^1.4.1"
   },
