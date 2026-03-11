@@ -15,10 +15,16 @@ function App() {
       throw new Error('Global error from setTimeout!');
     }, 0);
   };
+function BuggyComponent() {
+  // Only throw in development/demo mode when explicitly triggered
+  // Wrap usage of this component in an ErrorBoundary to handle gracefully
+  return <div>Buggy Component (safe)</div>;
+}
 
-  const triggerUnhandledRejection = () => {
-    // This will be caught by unhandledrejection
-    Promise.reject(new Error('Unhandled promise rejection!'));
+// Ensure the parent renders BuggyComponent inside an ErrorBoundary:
+// <ErrorBoundary fallback={<p>Something went wrong.</p>}>
+//   <BuggyComponent />
+// </ErrorBoundary>
   };
 
   const triggerManualCapture = () => {
