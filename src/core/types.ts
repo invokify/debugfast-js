@@ -2,8 +2,8 @@
  * Configuration options for DebugFast initialization
  */
 export interface DebugFastConfig {
-  /** API endpoint to send error reports to */
-  apiEndpoint: string;
+  /** API endpoint to send error reports to (default: https://ingestion.debugfa.st/v1/events) */
+  apiEndpoint?: string;
   /** API key for authentication */
   apiKey: string;
   /** Whether to capture screenshots on error (default: true) */

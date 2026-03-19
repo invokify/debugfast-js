@@ -33,6 +33,7 @@ export class DebugFast {
 
   private constructor(config: DebugFastConfig) {
     this.config = {
+      apiEndpoint: 'https://ingestion.debugfa.st/v1/events',
       captureScreenshot: true,
       captureConsole: true,
       captureNetwork: true,

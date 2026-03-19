@@ -18,8 +18,16 @@ yarn add debugfast-js
 import { DebugFast } from 'debugfast-js';
 
 DebugFast.init({
-  apiEndpoint: 'https://your-api.example.com/v1/events',
   apiKey: 'your-api-key',
+});
+```
+
+Events are sent to `https://ingestion.debugfa.st/v1/events` by default. Set `apiEndpoint` if you are self-hosting the ingestion API:
+
+```typescript
+DebugFast.init({
+  apiKey: 'your-api-key',
+  apiEndpoint: 'https://your-own-backend.com/v1/events',
 });
 ```
 
@@ -89,8 +97,11 @@ function handleRiskyOperation() {
 ```typescript
 DebugFast.init({
   // Required
-  apiEndpoint: 'https://api.example.com/v1/events',
   apiKey: 'your-api-key',
+
+  // Optional — defaults to https://ingestion.debugfa.st/v1/events
+  // Set this if you are self-hosting the ingestion API
+  // apiEndpoint: 'https://your-own-backend.com/v1/events',
 
   // Optional - all default to true
   captureScreenshot: true,
