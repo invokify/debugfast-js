@@ -45,7 +45,7 @@ src/
 - `debugfast-js/vue` - Vue plugin
 
 ## Test Apps
-- `test-app/` - React/Vite test app (port 5173)
+- `test-app-react/` - React/Vite test app (port 5173)
 - `test-app-vue/` - Vue/Vite test app (port 5174)
 - `test-app-next/` - Next.js 15 App Router test app (port 3000)
 
