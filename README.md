@@ -60,6 +60,79 @@ const SafeComponent = withDebugFastErrorBoundary(MyComponent, {
 });
 ```
 
+### Next.js (App Router)
+
+The SDK uses browser APIs (`window`, `document`) and must only run on the client. In Next.js App Router, `'use client'` components are still executed on the server during SSR, so a `typeof window !== 'undefined'` guard is required.
+
+**1. Create a `providers.tsx` client component** — initialize the SDK at module level so it starts as early as possible on the client:
+
+```tsx
+// app/providers.tsx
+'use client';
+
+import DebugFast from 'debugfast-js';
+import { DebugFastErrorBoundary } from 'debugfast-js/react';
+
+if (typeof window !== 'undefined') {
+  DebugFast.init({
+    apiKey: 'your-api-key',
+  });
+}
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <DebugFastErrorBoundary
+      fallback={(error, reset) => (
+        <div>
+          <p>{error.message}</p>
+          <button onClick={reset}>Try Again</button>
+        </div>
+      )}
+    >
+      {children}
+    </DebugFastErrorBoundary>
+  );
+}
+```
+
+**2. Wrap your root layout:**
+
+```tsx
+// app/layout.tsx
+import { Providers } from './providers';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+**3. Mark any component that calls `DebugFast` methods with `'use client'`:**
+
+```tsx
+// app/some-page.tsx
+'use client';
+
+import DebugFast from 'debugfast-js';
+
+export function MyComponent() {
+  const handleClick = () => {
+    try {
+      riskyOperation();
+    } catch (error) {
+      DebugFast.captureError(error as Error);
+    }
+  };
+
+  return <button onClick={handleClick}>Do something</button>;
+}
+```
+
 ### Vue 3
 
 ```typescript
