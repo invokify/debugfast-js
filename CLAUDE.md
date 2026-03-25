@@ -45,10 +45,15 @@ src/
 - `debugfast-js/vue` - Vue plugin
 
 ## Test Apps
-- `test-app/` - React test app (port 5173)
-- `test-app-vue/` - Vue test app (port 5174)
+- `test-app/` - React/Vite test app (port 5173)
+- `test-app-vue/` - Vue/Vite test app (port 5174)
+- `test-app-next/` - Next.js 15 App Router test app (port 3000)
 
 Run with `npm run dev` in each directory.
+
+### Next.js Test App Notes
+- SDK init is guarded with `typeof window !== 'undefined'` in `src/app/providers.tsx` — `'use client'` components still execute on the server during SSR, so the guard prevents `window is not defined` errors.
+- `outputFileTracingRoot` in `next.config.ts` is set to the monorepo root to silence the multiple-lockfiles warning from Next.js.
 
 ## Key Patterns
 
