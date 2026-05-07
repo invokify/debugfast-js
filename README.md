@@ -1,6 +1,6 @@
 # debugfast-js
 
-Front-end error tracking SDK for React and Vue applications. Captures comprehensive error context including screenshots, console logs, network requests, DOM snapshots, and user actions.
+Front-end error tracking SDK for [DebugFast](https://debugfa.st) — captures comprehensive error context including screenshots, console logs, network requests, DOM snapshots, and user actions. Works with React, Vue, and Next.js.
 
 ## Installation
 
