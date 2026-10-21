@@ -97,6 +97,11 @@ export function getElementText(element: Element, maxLength = 50): string {
 }
 
 /**
+ * Field names that should never leave the browser unmasked
+ */
+export const SENSITIVE_KEY_PATTERN = /password|passwd|credit|card|cvv|cvc|ssn|social|secret|token|api[_-]?key|authorization/i;
+
+/**
  * Check if an input is sensitive (password, credit card, etc.)
  */
 export function isSensitiveInput(element: Element): boolean {
@@ -105,7 +110,7 @@ export function isSensitiveInput(element: Element): boolean {
   const sensitiveTypes = ['password', 'credit-card', 'cc-number', 'cc-cvc', 'cc-exp'];
   if (sensitiveTypes.includes(element.type)) return true;
 
-  const sensitivePatterns = /password|credit|card|cvv|cvc|ssn|social|secret|token/i;
+  const sensitivePatterns = SENSITIVE_KEY_PATTERN;
   const name = element.name || '';
   const id = element.id || '';
   const autocomplete = element.autocomplete || '';

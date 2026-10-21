@@ -141,6 +141,27 @@ export const debugfastPlugin = {
   },
 };
 
+interface PiniaPluginContextLike {
+  store: {
+    $id: string;
+    $state: unknown;
+    $onAction?: (callback: (context: { name: string }) => void, detached?: boolean) => unknown;
+  };
+}
+
+/**
+ * Pinia plugin that attaches every store's state and recent actions to error reports
+ *
+ * @example
+ * pinia.use(debugfastPiniaPlugin);
+ */
+export function debugfastPiniaPlugin({ store }: PiniaPluginContextLike): void {
+  DebugFast.registerStore(store.$id, () => store.$state, 'pinia');
+  store.$onAction?.(({ name }) => {
+    DebugFast.recordStateAction(store.$id, name);
+  }, true);
+}
+
 /**
  * Composition API helper for capturing errors in setup functions
  */
