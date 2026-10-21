@@ -1,6 +1,6 @@
 {
   "name": "debugfast-js",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Front-end bug catching library for React and Vue applications with comprehensive error context capture",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -38,7 +38,11 @@
     "vue",
     "screenshot",
     "error-boundary",
-    "monitoring"
+    "monitoring",
+    "redux",
+    "pinia",
+    "zustand",
+    "jotai"
   ],
   "author": "invokify",
   "license": "MIT",

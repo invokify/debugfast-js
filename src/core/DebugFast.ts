@@ -2,6 +2,7 @@ import type {
   DebugFastConfig,
   CaptureOptions,
   ErrorReport,
+  StateSource,
   UserInfo,
 } from './types';
 import { ErrorCapture } from './ErrorCapture';
@@ -11,6 +12,7 @@ import { NetworkCollector } from '../collectors/NetworkCollector';
 import { UserActionCollector } from '../collectors/UserActionCollector';
 import { DOMCollector } from '../collectors/DOMCollector';
 import { ScreenshotCollector } from '../collectors/ScreenshotCollector';
+import { StateCollector } from '../collectors/StateCollector';
 import { ApiReporter } from '../reporter/ApiReporter';
 import { generateId } from '../utils/helpers';
 
@@ -19,6 +21,8 @@ import { generateId } from '../utils/helpers';
  */
 export class DebugFast {
   private static instance: DebugFast | null = null;
+  /** Stores registered via registerStore(), kept across init/destroy */
+  private static stores = new Map<string, { getState: () => unknown; source: StateSource }>();
 
   private config: Required<DebugFastConfig>;
   private errorCapture: ErrorCapture;
@@ -28,6 +32,7 @@ export class DebugFast {
   private userActionCollector: UserActionCollector | null = null;
   private domCollector: DOMCollector | null = null;
   private screenshotCollector: ScreenshotCollector | null = null;
+  private stateCollector: StateCollector | null = null;
   private reporter: ApiReporter;
   private initialized = false;
 
@@ -39,11 +44,14 @@ export class DebugFast {
       captureNetwork: true,
       captureDom: true,
       captureUserActions: true,
+      captureState: true,
       screenshotQuality: 0.7,
       maxConsoleEntries: 50,
       maxNetworkRequests: 20,
       maxUserActions: 30,
       maskSensitiveInputs: true,
+      maxStateSize: 50000,
+      stateSanitizer: (state) => state,
       tags: {},
       user: {},
       beforeSend: (report) => report,
@@ -126,6 +134,32 @@ export class DebugFast {
   }
 
   /**
+   * Register a store whose state is attached to every error report.
+   * Can be called before init(). Returns a function that unregisters the store.
+   */
+  static registerStore(
+    name: string,
+    getState: () => unknown,
+    source: StateSource = 'custom'
+  ): () => void {
+    DebugFast.stores.set(name, { getState, source });
+    DebugFast.instance?.stateCollector?.register(name, getState, source);
+
+    return () => {
+      if (DebugFast.stores.get(name)?.getState !== getState) return;
+      DebugFast.stores.delete(name);
+      DebugFast.instance?.stateCollector?.unregister(name, getState);
+    };
+  }
+
+  /**
+   * Record an action dispatched on a registered store (used by state integrations)
+   */
+  static recordStateAction(storeName: string, actionType: string): void {
+    DebugFast.instance?.stateCollector?.recordAction(storeName, actionType);
+  }
+
+  /**
    * Flush any pending error reports
    */
   static async flush(): Promise<void> {
@@ -194,6 +228,17 @@ export class DebugFast {
       this.screenshotCollector.init();
     }
 
+    if (this.config.captureState) {
+      this.stateCollector = new StateCollector(
+        this.config.maxStateSize,
+        this.config.stateSanitizer
+      );
+      this.stateCollector.init();
+      DebugFast.stores.forEach(({ getState, source }, name) => {
+        this.stateCollector?.register(name, getState, source);
+      });
+    }
+
     this.initialized = true;
     this.log('Initialized');
   }
@@ -207,6 +252,7 @@ export class DebugFast {
     this.userActionCollector?.destroy();
     this.domCollector?.destroy();
     this.screenshotCollector?.destroy();
+    this.stateCollector?.destroy();
     this.reporter.destroy();
 
     this.consoleCollector = null;
@@ -214,6 +260,7 @@ export class DebugFast {
     this.userActionCollector = null;
     this.domCollector = null;
     this.screenshotCollector = null;
+    this.stateCollector = null;
 
     this.initialized = false;
     this.log('Destroyed');
@@ -274,6 +321,14 @@ export class DebugFast {
 
     if (this.domCollector) {
       report.domSnapshot = this.domCollector.collect();
+    }
+
+    // Snapshot state before awaiting the screenshot so it reflects the moment of failure
+    if (this.stateCollector) {
+      const state = this.stateCollector.collect();
+      if (state.length > 0) {
+        report.state = state;
+      }
     }
 
     // Capture screenshot if enabled

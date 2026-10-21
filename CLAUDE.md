@@ -24,7 +24,10 @@ src/
 │   ├── NetworkCollector.ts
 │   ├── DOMCollector.ts
 │   ├── BrowserCollector.ts
-│   └── UserActionCollector.ts
+│   ├── UserActionCollector.ts
+│   └── StateCollector.ts   # Store state snapshots (Redux/Pinia/Zustand/Jotai/custom)
+├── integrations/
+│   └── state.ts          # Redux middleware, Zustand & Jotai helpers
 ├── reporter/
 │   └── ApiReporter.ts    # API endpoint with retry logic
 ├── adapters/
@@ -67,7 +70,10 @@ All collectors implement `init()`, `destroy()`, and `collect()` methods.
 Console logs, network requests, and user actions use circular buffers to limit memory usage.
 
 ### Sensitive Data Masking
-Password inputs and sensitive fields are automatically masked in DOM snapshots and user action tracking.
+Password inputs and sensitive fields are automatically masked in DOM snapshots and user action tracking. Store state keys matching `SENSITIVE_KEY_PATTERN` (`src/utils/helpers.ts`) are replaced with `[Masked]`.
+
+### State Capture
+Stores register through `DebugFast.registerStore(name, getState, source)`. The registry is static, so stores can register before `init()` and survive `destroy()`/re-init. Integrations (`src/integrations/state.ts`, `debugfastPiniaPlugin` in `src/adapters/vue.ts`) use structural types only — no runtime dependency on Redux/Pinia/Zustand/Jotai. State is collected before the screenshot `await` so it reflects the moment of failure.
 
 ### UUID Generation
 Event IDs are generated as UUID v4 using `crypto.randomUUID()` with a fallback implementation for environments without native support.
@@ -93,7 +99,7 @@ app.use(debugfastPlugin);
 ```
 
 ## Error Report Payload
-Reports include: id (UUID v4), timestamp, message, stack, source, browser info, screenshot, console logs, network requests, user actions, DOM snapshot, user info, and tags.
+Reports include: id (UUID v4), timestamp, message, stack, source, browser info, screenshot, console logs, network requests, user actions, DOM snapshot, store state, user info, and tags.
 
 ## Backend Integration
 

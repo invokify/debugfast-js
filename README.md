@@ -182,15 +182,18 @@ DebugFast.init({
   captureNetwork: true,
   captureDom: true,
   captureUserActions: true,
+  captureState: true,          // Snapshot registered stores (see "State Capture")
 
   // Limits
   screenshotQuality: 0.7,      // 0-1, default: 0.7
   maxConsoleEntries: 50,       // default: 50
   maxNetworkRequests: 20,      // default: 20
   maxUserActions: 30,          // default: 30
+  maxStateSize: 50000,         // chars of serialized state per report, default: 50000
 
   // Privacy
   maskSensitiveInputs: true,   // Mask password fields, etc.
+  stateSanitizer: (state, storeName) => state, // Redact store state before it is sent
 
   // Custom context
   tags: { environment: 'production' },
@@ -206,6 +209,40 @@ DebugFast.init({
   debug: false,
 });
 ```
+
+## State Capture
+
+Attach your store state to every error report. Integrations have no runtime dependency on the
+state library, and stores can be registered before `DebugFast.init()`.
+
+```typescript
+// Redux / Redux Toolkit
+import { createDebugFastMiddleware } from 'debugfast-js';
+configureStore({
+  reducer,
+  middleware: (getDefault) => getDefault().concat(createDebugFastMiddleware()),
+});
+
+// Pinia (every store, plus recent action names)
+import { debugfastPiniaPlugin } from 'debugfast-js/vue';
+pinia.use(debugfastPiniaPlugin);
+
+// Zustand
+import { trackZustandStore } from 'debugfast-js';
+trackZustandStore(useCartStore, 'cart');
+
+// Jotai (atoms cannot be enumerated, so list the ones to capture)
+import { getDefaultStore } from 'jotai';
+import { trackJotaiAtoms } from 'debugfast-js';
+trackJotaiAtoms(getDefaultStore(), { cart: cartAtom, filters: filtersAtom });
+
+// Anything else
+const unregister = DebugFast.registerStore('settings', () => settings, 'custom');
+```
+
+Snapshots are taken at the moment of the error. Keys that look sensitive (`password`, `token`,
+`secret`, `apiKey`, `card`, …) are replaced with `[Masked]`, circular references are cut, and
+oversized state is trimmed to `maxStateSize`.
 
 ## API Reference
 
@@ -253,6 +290,10 @@ DebugFast.setTags({
 });
 ```
 
+#### `DebugFast.registerStore(name, getState, source?)`
+
+Attach a store's state to error reports. Returns a function that unregisters it.
+
 #### `DebugFast.flush()`
 
 Flush any pending error reports. Useful before page unload.
@@ -288,6 +329,7 @@ Each error report includes:
 | **Network** | Recent fetch/XHR requests with timing |
 | **User Actions** | Recent clicks, inputs, navigation |
 | **DOM** | HTML snapshot (sensitive inputs masked) |
+| **State** | Redux, Pinia, Zustand, Jotai or custom store state + recent actions |
 | **User** | Custom user identification |
 | **Tags** | Custom metadata |
 
@@ -295,6 +337,7 @@ Each error report includes:
 
 - Sensitive inputs (password, credit card, SSN) are automatically masked
 - DOM snapshots redact sensitive field values
+- Store state masks sensitive keys; use `stateSanitizer` for anything else
 - Use `beforeSend` hook to filter or redact additional data
 - Screenshot capture can be disabled globally or per-error
 

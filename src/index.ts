@@ -17,4 +17,13 @@ export type {
   ConsoleEntry,
   BrowserInfo,
   DOMSnapshot,
+  StateSnapshot,
+  StateSource,
 } from './core/types';
+
+// State library integrations
+export {
+  createDebugFastMiddleware,
+  trackZustandStore,
+  trackJotaiAtoms,
+} from './integrations/state';

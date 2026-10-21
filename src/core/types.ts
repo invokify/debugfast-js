@@ -16,6 +16,8 @@ export interface DebugFastConfig {
   captureDom?: boolean;
   /** Whether to capture user actions (default: true) */
   captureUserActions?: boolean;
+  /** Whether to capture registered store state (default: true) */
+  captureState?: boolean;
   /** Screenshot quality 0-1 (default: 0.7) */
   screenshotQuality?: number;
   /** Maximum console entries to store (default: 50) */
@@ -26,6 +28,10 @@ export interface DebugFastConfig {
   maxUserActions?: number;
   /** Whether to mask sensitive DOM inputs (default: true) */
   maskSensitiveInputs?: boolean;
+  /** Maximum serialized state size in characters, shared across all stores (default: 50000) */
+  maxStateSize?: number;
+  /** Transform or redact store state before it is serialized */
+  stateSanitizer?: (state: unknown, storeName: string) => unknown;
   /** Custom tags to include with every error report */
   tags?: Record<string, string>;
   /** User information to include with error reports */
@@ -184,6 +190,29 @@ export interface DOMSnapshot {
 }
 
 /**
+ * Source library of a captured store
+ */
+export type StateSource = 'redux' | 'pinia' | 'zustand' | 'jotai' | 'custom';
+
+/**
+ * Snapshot of a registered store at the moment of the error
+ */
+export interface StateSnapshot {
+  /** Store name (e.g. Pinia store id) */
+  name: string;
+  /** Library the store comes from */
+  source: StateSource;
+  /** Serialized state (sensitive keys masked) */
+  data: unknown;
+  /** Most recent action names dispatched on this store */
+  recentActions?: string[];
+  /** Truncated due to size */
+  truncated?: boolean;
+  /** Timestamp */
+  timestamp: number;
+}
+
+/**
  * Complete error report payload
  */
 export interface ErrorReport {
@@ -213,6 +242,8 @@ export interface ErrorReport {
   userActions?: UserAction[];
   /** DOM snapshot */
   domSnapshot?: DOMSnapshot;
+  /** Registered store state snapshots */
+  state?: StateSnapshot[];
   /** User information */
   user?: UserInfo;
   /** Custom tags */

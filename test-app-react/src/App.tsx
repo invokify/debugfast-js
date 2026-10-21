@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import DebugFast from 'debugfast-js';
+import { cartStore } from './cartStore';
 
 function BuggyComponent(): React.ReactNode {
   throw new Error('This component always crashes!');
@@ -71,6 +72,13 @@ function App() {
             placeholder="Password (will be masked)"
             style={{ padding: 8, width: '100%', boxSizing: 'border-box', marginTop: 8 }}
           />
+        </section>
+
+        <section>
+          <h3>Test State Capture</h3>
+          <button onClick={() => cartStore.add(`sku-${cartStore.state.items.length + 1}`)} style={buttonStyle}>
+            Add item to cart (then trigger an error)
+          </button>
         </section>
 
         <section>
