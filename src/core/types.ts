@@ -40,6 +40,12 @@ export interface DebugFastConfig {
   beforeSend?: (report: ErrorReport) => ErrorReport | false;
   /** Enable debug logging (default: false) */
   debug?: boolean;
+  /**
+   * Release identifier of the deployed build (e.g. a version or commit SHA).
+   * Must match the `release` used when uploading source maps so stack traces
+   * can be un-minified. Allowed characters: A-Z a-z 0-9 . _ @ + -
+   */
+  release?: string;
 }
 
 /**
@@ -252,6 +258,8 @@ export interface ErrorReport {
   extra?: Record<string, unknown>;
   /** React component stack (if applicable) */
   componentStack?: string;
+  /** Release identifier from config, used to select uploaded source maps */
+  release?: string;
 }
 
 /**

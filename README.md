@@ -195,6 +195,11 @@ DebugFast.init({
   maskSensitiveInputs: true,   // Mask password fields, etc.
   stateSanitizer: (state, storeName) => state, // Redact store state before it is sent
 
+  // Release of the deployed build (version or commit SHA). Must match the
+  // `release` used when uploading source maps so stack traces are un-minified.
+  // Allowed characters: A-Z a-z 0-9 . _ @ + -
+  release: '1.4.2',
+
   // Custom context
   tags: { environment: 'production' },
   user: { id: 'user-123', email: 'user@example.com' },
