@@ -56,6 +56,7 @@ export class DebugFast {
       user: {},
       beforeSend: (report) => report,
       debug: false,
+      release: '',
       ...config,
     };
 
@@ -304,6 +305,7 @@ export class DebugFast {
       user: { ...this.config.user, ...options.user },
       tags: { ...this.config.tags, ...options.tags },
       extra: options.extra,
+      ...(this.config.release ? { release: this.config.release } : {}),
     };
 
     // Collect additional context
