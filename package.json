@@ -1,6 +1,6 @@
 {
   "name": "debugfast-js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Front-end bug catching library for React and Vue applications with comprehensive error context capture",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -48,7 +48,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/invokify/debugfast-js.git"
+    "url": "git+https://github.com/invokify/debugfast-js.git"
   },
   "homepage": "https://github.com/invokify/debugfast-js#readme",
   "bugs": {
