@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "main": "../dist/vue.js",
+  "module": "../dist/legacy/vue.js",
+  "types": "../dist/vue.d.ts"
+}
