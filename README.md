@@ -165,6 +165,22 @@ function handleRiskyOperation() {
 </script>
 ```
 
+### Vue 2
+
+Works with Vue 2.6+ and older bundlers such as Vue CLI 4 / webpack 4:
+
+```typescript
+import Vue from 'vue';
+import { debugfastPlugin } from 'debugfast-js/vue';
+import App from './App.vue';
+
+// The plugin is typed against Vue 3's `App`; at runtime it only uses
+// `config.errorHandler`, which Vue 2's constructor also exposes.
+Vue.use(debugfastPlugin as any, { captureComponentInfo: true });
+
+new Vue({ render: (h) => h(App) }).$mount('#app');
+```
+
 ## Configuration
 
 ```typescript
@@ -363,6 +379,8 @@ Errors are automatically captured from:
 - Edge 79+
 
 Requires `crypto.randomUUID()` or falls back to polyfill.
+
+Bundlers that read `package.json` `exports` (Vite, webpack 5, Rollup, esbuild, Next.js) get the ES2020 build. Bundlers that don't (webpack 4, Vue CLI 4) get an ES2019 build in `dist/legacy/` through the `module` field and the `vue/` and `react/` folders.
 
 ## TypeScript
 
