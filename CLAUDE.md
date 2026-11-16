@@ -7,7 +7,7 @@ A TypeScript library for catching front-end bugs in React and Vue applications. 
 - **Language**: TypeScript
 - **Build**: tsup (dual ESM/CJS output)
 - **Screenshot**: html2canvas
-- **Frameworks**: React 16.8+, Vue 3+
+- **Frameworks**: React 16.8+, Vue 2.6+ / Vue 3+
 
 ## Project Structure
 ```
@@ -47,10 +47,15 @@ src/
 - `debugfast-js/react` - React Error Boundary
 - `debugfast-js/vue` - Vue plugin
 
+### Build Outputs
+- `dist/*.mjs` / `dist/*.js` (ES2020 ESM / CJS) - served via `exports` to modern bundlers and Node. Changes here affect every modern user.
+- `dist/legacy/*.js` (ES2019 ESM, `.js` extension) - for bundlers that ignore `exports` (webpack 4 / Vue CLI 4). Reached via the root `module` field and the `vue/package.json` / `react/package.json` stub folders. It must stay `.js`: webpack 4 resolves imports inside `.mjs` files with `main` (CJS), so the adapters would load a second DebugFast singleton and silently drop framework errors.
+
 ## Test Apps
 - `test-app-react/` - React/Vite test app (port 5173)
 - `test-app-vue/` - Vue/Vite test app (port 5174)
 - `test-app-next/` - Next.js 15 App Router test app (port 3000)
+- `test-app-vue2/` - Vue 2.7 / Vue CLI 4 (webpack 4) / TS / Babel test app on Node 14.21.3 (port 5175). Guards the `dist/legacy` build; `resolve.symlinks: false` keeps the `file:..` link from being Babel-transpiled
 
 Run with `npm run dev` in each directory.
 

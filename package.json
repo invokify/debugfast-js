@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "description": "Front-end bug catching library for React and Vue applications with comprehensive error context capture",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/legacy/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -23,7 +23,9 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "react",
+    "vue"
   ],
   "scripts": {
     "build": "tsup",
@@ -67,7 +69,7 @@
   "peerDependencies": {
     "@types/react": ">=18.0.0",
     "react": ">=16.8.0",
-    "vue": ">=3.0.0"
+    "vue": ">=2.6.0"
   },
   "peerDependenciesMeta": {
     "@types/react": {
